@@ -3,30 +3,22 @@
 # Date: 5/8/25
 # Description: Test file for microservice server
 
+from http.client import responses
 import requests
-import os
-from dotenv import load_dotenv
-import boto3
 
-client = boto3.client(
-    'ec2',
-    aws_access_key_id = os.getenv("aws_access_key_id"),
-    aws_secret_access_key = os.getenv("aws_secret_access_key"),
-    region_name = "us-east-1"
-)
 
 def create_instance_body():
     body = {
-
+        "ami_id": "ami-0c2b8ca1dad447f8a",#useast1 amazonlinux2023 free
+        "instance_type": "t2.micro"#free tier
     }
     return body
 
-
 def create_instance_client():
-    url = "https://localhost:5500/create"
+    url = "http://localhost:5670/create"
     headers = {"Content-Type": "application/json"}
     data = create_instance_body()
-
+    print(data)
     response = requests.post(url, json=data, headers=headers)
 
     if response.status_code == 200:
@@ -36,4 +28,5 @@ def create_instance_client():
         print(f"Error: {response.reason}")
 
 
-
+#test
+create_instance_client()
