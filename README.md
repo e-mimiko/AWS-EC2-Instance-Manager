@@ -16,3 +16,7 @@ security_group_ids":
 
 figure out how to pass id, key and region name in all requests
 
+for delete, region_name is not needed so its not factored in in the microservice code
+
+for delete, terminate_instance is used not stop_instance
+same for create, run_instance is called not start_instance

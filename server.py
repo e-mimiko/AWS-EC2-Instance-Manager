@@ -14,16 +14,21 @@ load_dotenv()
 
 app = Flask(__name__)
 
-session = boto3.Session(
-    aws_access_key_id = os.getenv("aws_access_key_id"),
-    aws_secret_access_key = os.getenv("aws_secret_access_key"),
-)
+def create_ec2_client(service, key_id, key, region):
+    session = boto3.Session(
+        aws_access_key_id = key_id,
+        aws_secret_access_key = key,
+        region_name = region
+    )
+    ec2 = session.client(service)
+    return ec2
 
 @app.route("/create", methods=["POST"])
 def createInstance():
     data = request.get_json()
-    ec2 = session.client('ec2', region_name=data.get("region_name"))
     #if verify input(data) is of correct type. dict.get will handle defaults:
+    ec2 = create_ec2_client("ec2", data.get("aws_access_key_id",""),
+            data.get("aws_secret_access_key",""),data.get("region_name", ""))
     try:
         response = ec2.run_instances(
             ImageId = data.get("ami_id"),
@@ -31,7 +36,29 @@ def createInstance():
             MaxCount = data.get("max_count", 1),
             MinCount = data.get("min_count", 1)
         )
-        return jsonify(response["Instances"]), 200
+        #get id, state and type
+        new_instance_id = response["Instances"][0]["InstanceId"]
+        new_instance_state = response["Instances"][0]["State"]
+        new_instance_type = response["Instances"][0]["InstanceType"]
+        #create new dictionary
+        return_data = {"instance_id": new_instance_id, "state": new_instance_state, "type": new_instance_type}
+        return jsonify(return_data), 200
+    except botocore.exceptions.ClientError as Error:
+        return jsonify({
+            "reason": Error.response["Error"]["Message"]
+        }), Error.response["ResponseMetadata"]["HTTPStatusCode"]
+
+@app.route("/delete", methods=["DELETE"])
+def deleteInstance():
+    data = request.get_json()
+    #if verify input(data) is of correct type. dict.get will handle defaults:
+    ec2 = create_ec2_client("ec2", data.get("aws_access_key_id",""),
+            data.get("aws_secret_access_key",""),data.get("region_name", ""))
+    try:
+        response = ec2.terminate_instances(
+            InstanceIds = [data.get("instance_id")],
+        )
+        return "", 200
     except botocore.exceptions.ClientError as Error:
         return jsonify({
             "reason": Error.response["Error"]["Message"]
@@ -41,19 +68,3 @@ def createInstance():
 
 if __name__ == '__main__':
     app.run(debug=True, port=5670)
-
-
-# sts = session.client("sts")
-# identity = sts.get_caller_identity()
-# print("Caller Identity:", identity)
-#
-# try:
-#     response = ec2.run_instances(
-#         ImageId="ami-0c2b8ca1dad447f8a",  # replace with a valid AMI for your region
-#         InstanceType="t2.micro",
-#         MinCount=1,
-#         MaxCount=1
-#     )
-#     print("Success:", response)
-# except Exception as e:
-#     print("Error:", e)
