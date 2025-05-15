@@ -6,7 +6,7 @@ This microservices manages the CRUD operation for the AWS EC2 Instances. You can
 
 ## How to setup
 
-Please download this repository to get started.This microservice is meant to run locally.
+Please download this repository to get started. This microservice is meant to run locally.
 
 Included in this repository:  
 **requirements.txt** \- these are the packages to install. Do this first.  
@@ -38,7 +38,7 @@ Request body (JSON):
 
 ### Update an instance: PUT /ec2-service/update
 
-This will update the instance type for EC2 Instance specified by `instance_id`  
+This will update the instance type for EC2 Instance specified by `instance_id`. **Note**: This will stop and restart the Instance. 
 Request body (JSON):
 
 | Attribute | Type | Required | Description | Example |

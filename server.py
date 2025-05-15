@@ -33,7 +33,6 @@ def create_ec2_resource(service, key_id, key, region):
 @app.route("/ec2-service/create", methods=["POST"])
 def createInstance():
     data = request.get_json()
-    #if verify input(data) is of correct type. dict.get will handle defaults:
     ec2 = create_ec2_client("ec2", data.get("aws_access_key_id",""),
             data.get("aws_secret_access_key",""),data.get("region_name", ""))
     parameters = {
@@ -58,7 +57,6 @@ def createInstance():
 @app.route("/ec2-service/delete", methods=["DELETE"])
 def deleteInstance():
     data = request.get_json()
-    #if verify input(data) is of correct type. dict.get will handle defaults:
     ec2 = create_ec2_client("ec2", data.get("aws_access_key_id",""),
             data.get("aws_secret_access_key",""),data.get("region_name", ""))
     try:
@@ -75,7 +73,6 @@ def deleteInstance():
 @app.route("/ec2-service/view", methods=["GET"])
 def getAllInstances():
     creds = request.get_json()
-    #if verify input(data) is of correct type. dict.get will handle defaults:
     ec2 = create_ec2_resource("ec2", creds.get("aws_access_key_id",""),
             creds.get("aws_secret_access_key",""),creds.get("region_name", ""))
     return_data = []
@@ -93,7 +90,6 @@ def getAllInstances():
 @app.route("/ec2-service/viewById/<instance_id>", methods=["GET"])
 def getInstanceById(instance_id):
     creds = request.get_json()
-    #if verify input(data) is of correct type. dict.get will handle defaults:
     ec2 = create_ec2_resource("ec2", creds.get("aws_access_key_id",""),
             creds.get("aws_secret_access_key",""),creds.get("region_name", ""))
     try:
@@ -109,7 +105,6 @@ def getInstanceById(instance_id):
 @app.route("/ec2-service/update", methods=["PUT"])
 def updateInstance():
     data = request.get_json()
-    #if verify input(data) is of correct type. dict.get will handle defaults:
     ec2 = create_ec2_client("ec2", data.get("aws_access_key_id",""),
             data.get("aws_secret_access_key",""),data.get("region_name", ""))
     try:
@@ -120,7 +115,13 @@ def updateInstance():
                 InstanceId = data.get("instance_id",""),
                 InstanceType = {"Value": data.get("instance_type","")}
             )
-            return "", 200
+            try:
+                ec2.start_instances(InstanceIds=[data.get("instance_id", "")])
+                return "", 200
+            except botocore.exceptions.ClientError as Error:
+                return jsonify({
+                    "reason": Error.response["Error"]["Message"]
+                }), Error.response["ResponseMetadata"]["HTTPStatusCode"]
         except botocore.exceptions.ClientError as Error:
             return jsonify({
                 "reason": Error.response["Error"]["Message"]
