@@ -5,12 +5,10 @@
 from crypt import methods
 
 from flask import Flask, request, jsonify
-import os
-from dotenv import load_dotenv
 import boto3
 import botocore.exceptions
 
-load_dotenv()
+
 
 app = Flask(__name__)
 

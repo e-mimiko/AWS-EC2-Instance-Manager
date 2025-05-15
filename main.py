@@ -47,8 +47,11 @@ def delete_instance(id_to_delete):
 def get_all_instances():
     url = "http://localhost:5670/ec2-service/view"
     headers = {"Content-Type": "application/json"}
+    #call to get required attributes
     data = get_creds()
+    #request to get instances
     response = requests.get(url, json=data, headers=headers)
+    #response holds the response back from the microservice
     if response.status_code == 200:
         print("All Instances:\n", response.json())
     else:
@@ -91,4 +94,4 @@ def update_instance(instance_id, instance_type):
 #--update an instance by id
 #update_instance("i-06fbf84052ec35770", "t3.micro")
 #--get instance by id to show change in type
-get_instance_by_id("i-06fbf84052ec35770")
+#get_instance_by_id("i-06fbf84052ec35770")
