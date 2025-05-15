@@ -1,10 +1,10 @@
 # AWS EC2 Instance Manager Microservice
 
-# Description
+## Description
 
 This microservices manages the CRUD operation for the AWS EC2 Instances. You can add, remove, update and view AWS EC2 Instances using this microservice. 
 
-# How to setup
+## How to setup
 
 Please download this repository to get started.This microservice is meant to run locally.
 
@@ -15,11 +15,11 @@ Included in this repository:
 To get started with the Boto3 AWS SDK for Python, please follow the [installation guide](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/quickstart.html).  
 An IAM User account is recommended for generating AWS credentials. Here is a good [tutorial](https://www.youtube.com/watch?v=ZQQe5En9oS8&ab_channel=CodeWithMuh) on this.
 
-# How to request data
+## How to request data
 
 To request, use one of the various endpoints. To:
 
-## Create an instance: POST /ec2-service/create
+### Create an instance: POST /ec2-service/create
 
 This will create and run a new EC2 Instance  
 Request body (JSON):
@@ -36,7 +36,7 @@ Request body (JSON):
 | `security_group_ids` | list\[string\] | No | List of security group IDs | `["sg-0d92db76742671f1e"]` |
 | `subnet_id` | string | No | Subnet ID | `"subnet-09208976b53dbf945"` |
 
-## Update an instance: PUT /ec2-service/update
+### Update an instance: PUT /ec2-service/update
 
 This will update the instance type for EC2 Instance specified by `instance_id`  
 Request body (JSON):
@@ -49,7 +49,7 @@ Request body (JSON):
 | `instance_id` | string | Yes | ID of the EC2 Instance | `"ami-0c2b8ca1dad447f8"` |
 | `instance_type` | string | Yes | The EC2 Instance type to update the instance to | `"t3.micro"` |
 
-## Delete an instance: PUT /ec2-service/delete
+### Delete an instance: PUT /ec2-service/delete
 
 This will delete the EC2 Instance specified in `instance_id`  
 Request body (JSON):
@@ -61,7 +61,7 @@ Request body (JSON):
 | `region_name` | string | Yes | The region associated with the EC2 Instance to be deleted | `“us-east-1”` |
 | `instance_id` | string | Yes | ID of the EC2 Instance to terminate | `"ami-0c2b8ca1dad447f8"` |
 
-## View all EC2 Instances: GET /ec2-service/view
+### View all EC2 Instances: GET /ec2-service/view
 
 This will return all EC2 Instances associated with the `region_name`.  
 Request body (JSON):
@@ -72,7 +72,7 @@ Request body (JSON):
 | `aws_secret_access_key` | string | Yes | AWS account key | `-` |
 | `region_name` | string | Yes | The region associated with the EC2 Instances | `“us-east-1”` |
 
-## View an EC2 Instance: GET /ec2-service/viewById
+### View an EC2 Instance: GET /ec2-service/viewById
 
 This will return the EC2 Instance specified by `instance_id`  
 Request body (JSON):
@@ -84,11 +84,11 @@ Request body (JSON):
 | `region_name` | string | Yes | The region associated with the EC2 Instance | `“us-east-1”` |
 | `instance_id` | string | Yes | ID of the EC2 Instance | `"ami-0c2b8ca1dad447f8"` |
 
-# How to receive data
+## How to receive data
 
 A response will be sent back upon request. 
 
-## GET Response (JSON)
+### GET Response (JSON)
 
 | HTTP Status Code | Response Body Attribute | Type | Required | Description |
 | :---- | :---- | :---- | :---- | :---- |
@@ -97,7 +97,7 @@ A response will be sent back upon request.
 |  | `state` | string | Yes | Current state of the instance |
 |  | `type` | string | Yes | Instance type (e.g., `t2.micro`) |
 
-## DELETE/PUT/POST Response
+### DELETE/PUT/POST Response
 
 | HTTP Status Code | Response Body Attribute | Required |
 | :---- | :---- | :---- |
@@ -107,22 +107,22 @@ A response will be sent back upon request.
 | 500 | `reason` | Yes |
 |  |  |  |
 
-# Example call to request and receive data
+## Example call to request and receive data
 
 To receive data from the microservice, a request must be placed. 
 
 ``` python    
-    url \= "http://localhost:5670/ec2-service/view"  
-    headers \= {"Content-Type": "application/json"}  
-    \#call to get required attributes  
-    data \= get\_creds()  
-    \#request to get instances  
-    response \= requests.get(url, json=data, headers=headers)  
-    \#response holds the response back from the microservice  
-    if response.status\_code \== 200:  
-        print("All Instances:\\n", response.json())  
-    else:  
-        print(f"Error {response.status\_code}: {response.reason}")
+    url = "http://localhost:5670/ec2-service/view"
+    headers = {"Content-Type": "application/json"}
+    #call to get required attributes
+    data = get_creds()
+    #request to get instances
+    response = requests.get(url, json=data, headers=headers)
+    #response holds the response back from the microservice
+    if response.status_code == 200:
+        print("All Instances:\n", response.json())
+    else:
+        print(f"Error {response.status_code}: {response.reason}")
 ```
 
-# UML Diagram
+## UML Diagram
