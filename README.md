@@ -20,3 +20,5 @@ for delete, region_name is not needed so its not factored in in the microservice
 
 for delete, terminate_instance is used not stop_instance
 same for create, run_instance is called not start_instance
+
+the update route has region parameter but that's just used to find the right instance. only the id and type is really allowed to be updated.
