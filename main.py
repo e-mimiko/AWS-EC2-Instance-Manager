@@ -27,12 +27,9 @@ def create_instance():
     response = requests.post(url, json=data, headers=headers)
 
     if response.status_code == 200:
-        print("Successfully created Instance")
-        response_data = response.json()
-        return response_data.get("instance_id")
+        print(f"Status {response.status_code}: Successfully created Instance")
     else:
-        response_error = "Error: " + response.reason
-        return response_error
+        print(f"Error: {response.reason}")
 
 
 def delete_instance(id_to_delete):
@@ -53,7 +50,7 @@ def get_all_instances():
     data = get_creds()
     response = requests.get(url, json=data, headers=headers)
     if response.status_code == 200:
-        return response.json()
+        print("All Instances:\n", response.json())
     else:
         print(f"Error {response.status_code}: {response.reason}")
 
@@ -63,12 +60,12 @@ def get_instance_by_id(instance_id):
     data = get_creds()
     response = requests.get(url, json=data, headers=headers)
     if response.status_code == 200:
-        return response.json()
+        print("Instance Requested:\n", response.json())
     else:
         print(f"Error {response.status_code}: {response.reason}")
 
+#This function will temporarily stop the instance to change its type. It will be restarted right after.
 def update_instance(instance_id, instance_type):
-    print("Instance before update: ", get_instance_by_id(instance_id))
     url = f"http://localhost:5670/ec2-service/update"
     headers = {"Content-Type": "application/json"}
     data = get_creds()
@@ -76,15 +73,22 @@ def update_instance(instance_id, instance_type):
     data["instance_type"] = instance_type
     response = requests.put(url, json=data, headers=headers)
     if response.status_code == 200:
-        print("Update successful. Here is the updated instance: ", get_instance_by_id(instance_id))
+        print("Update successful")
     else:
         print(f"Error {response.status_code}: {response.reason}")
 
 
-#test
-#create_new instance and print ID
-#print(create_instance_client())
-#delete_instance_client("i-07c9623f2e90442ca")
-#print(getAllInstances())
-#print(getInstanceByID("i-06fbf84052ec35770"))
-update_instance("i-06fbf84052ec35770", "t3.micro")
+#test calls
+
+#--create an instance
+#create_instance()
+#--create another instance
+#create_instance()
+#--get_all_instances
+#get_all_instances()
+#--get instance by id
+#get_instance_by_id("i-06fbf84052ec35770")
+#--update an instance by id
+#update_instance("i-06fbf84052ec35770", "t3.micro")
+#--get instance by id to show change in type
+get_instance_by_id("i-06fbf84052ec35770")

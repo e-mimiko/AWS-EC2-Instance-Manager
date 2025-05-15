@@ -38,20 +38,19 @@ def createInstance():
     #if verify input(data) is of correct type. dict.get will handle defaults:
     ec2 = create_ec2_client("ec2", data.get("aws_access_key_id",""),
             data.get("aws_secret_access_key",""),data.get("region_name", ""))
+    parameters = {
+        "ImageId" : data.get("ami_id"),
+        "InstanceType" : data.get("instance_type"),
+        "MaxCount" : data.get("max_count", 1),
+        "MinCount" : data.get("min_count", 1)
+    }
+    if data.get("security_group_ids"):
+        parameters["SecurityGroupIds"] = data.get("security_group_ids")
+    if data.get("subnet_id"):
+        parameters["SubnetId"] = data.get("subnet_id")
     try:
-        response = ec2.run_instances(
-            ImageId = data.get("ami_id"),
-            InstanceType = data.get("instance_type"),
-            MaxCount = data.get("max_count", 1),
-            MinCount = data.get("min_count", 1)
-        )
-        #get id, state and type
-        new_instance_id = response["Instances"][0]["InstanceId"]
-        new_instance_state = response["Instances"][0]["State"]
-        new_instance_type = response["Instances"][0]["InstanceType"]
-        #create new dictionary
-        return_data = {"instance_id": new_instance_id, "state": new_instance_state, "type": new_instance_type}
-        return jsonify(return_data), 200
+        ec2.run_instances(**parameters)
+        return "", 200
     except botocore.exceptions.ClientError as Error:
         return jsonify({
             "reason": Error.response["Error"]["Message"]
@@ -65,7 +64,7 @@ def deleteInstance():
     ec2 = create_ec2_client("ec2", data.get("aws_access_key_id",""),
             data.get("aws_secret_access_key",""),data.get("region_name", ""))
     try:
-        response = ec2.terminate_instances(
+        ec2.terminate_instances(
             InstanceIds = [data.get("instance_id")],
         )
         return "", 200
