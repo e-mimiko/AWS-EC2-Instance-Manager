@@ -2,8 +2,6 @@
 # GitHub username: e-mimiko
 # Date: 5/8/25
 # Description: AWS EC2 Instance Manager
-from crypt import methods
-
 from flask import Flask, request, jsonify
 import boto3
 import botocore.exceptions
