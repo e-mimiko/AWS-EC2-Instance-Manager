@@ -89,14 +89,13 @@ Request body (JSON):
 A response will be sent back upon request. 
 
 ### GET Response (JSON)
-List of all instance(s), each with:
 
-| HTTP Status | Field            | Type   | Required | Description                             |
-|-------------|------------------|--------|----------|-----------------------------------------|
-| 200         | *\[ ]*           | list   | Yes      | Root-level list of EC2 instance objects |
-|             | └─ `instance_id` | string | Yes      | The unique ID of the instance           |
-|             | └─ `state`       | string | Yes      | Current state of the instance           |
-|             | └─ `type`        | string | Yes      | Instance type (e.g., `t2.micro`)        |
+| HTTP Status | Field          | Type   | Required | Description                             |
+|-------------|----------------|--------|----------|-----------------------------------------|
+| 200         | *\[ ]*         | list   | Yes      | Root-level list of EC2 instance objects |
+|             | ─ `instance_id` | string | Yes      | The unique ID of the instance           |
+|             | ─ `state`       | string | Yes      | Current state of the instance           |
+|             | ─ `type`      | string | Yes      | Instance type (e.g., `t2.micro`)        |
 
 ### DELETE/PUT/POST Response
 
