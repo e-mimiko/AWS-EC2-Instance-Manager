@@ -116,10 +116,12 @@ A response will be sent back upon request.
 
 To receive data from the microservice, a request must be placed. 
 
-``` python    
+``` python  
+    import requests
+      
     url = "http://localhost:5670/ec2-service/view"
     headers = {"Content-Type": "application/json"}
-    #call to get required attributes
+    #call to get required attributes, and aws access credentials
     data = get_creds()
     #request to get instances
     response = requests.get(url, json=data, headers=headers)
