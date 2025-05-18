@@ -72,9 +72,15 @@ Request body (JSON):
 | `aws_secret_access_key` | string | Yes | AWS account key | `-` |
 | `region_name` | string | Yes | The region associated with the EC2 Instances | `“us-east-1”` |
 
-### View an EC2 Instance: GET /ec2-service/viewById
+### View an EC2 Instance: GET /ec2-service/viewById/<instance_id>
 
 This will return the EC2 Instance specified by `instance_id`  
+Path Parameter:
+
+| Attribute | Type | Required | Description | Example |
+| :---- | :---- | :---- | :---- | :---- |
+| `instance_id` | string | Yes | ID of the EC2 Instance | `"ami-0c2b8ca1dad447f8"` |
+
 Request body (JSON):
 
 | Attribute | Type | Required | Description | Example |
@@ -82,7 +88,6 @@ Request body (JSON):
 | `aws_access_key_id` | string | Yes | AWS account id | `-` |
 | `aws_secret_access_key` | string | Yes | AWS account key | `-` |
 | `region_name` | string | Yes | The region associated with the EC2 Instance | `“us-east-1”` |
-| `instance_id` | string | Yes | ID of the EC2 Instance | `"ami-0c2b8ca1dad447f8"` |
 
 ## How to receive data
 
