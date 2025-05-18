@@ -133,4 +133,4 @@ To receive data from the microservice, a request must be placed.
 ```
 
 ## UML Diagram
-![Image](https://github.com/user-attachments/assets/c152641b-a359-493a-aef9-d02c5995208e)
+![Image](https://github.com/user-attachments/assets/a41d6f93-1431-47e5-98ec-afe8eb2cf538)
